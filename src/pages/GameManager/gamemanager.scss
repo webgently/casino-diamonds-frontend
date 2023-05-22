@@ -1,0 +1,154 @@
+.game-management-layout {  
+    @apply w-full flex justify-center items-center relative min-h-[100vh];
+    > div {
+        @apply flex flex-col justify-center gap-[10px] w-[90%] sm:w-[80%] md:w-[60%] slg:w-[94%] lg:w-[90%] xl:w-[85%] 2xl:w-[75%] h-full my-[6%] slg:my-0 slg:absolute;
+        .game-management-header {
+            @apply flex items-center justify-between text-[20px];
+            .balance-container {
+                @apply flex items-center justify-center slg:justify-end gap-[1em];
+                > label {
+                  text-shadow: -0.0625em -0.0625em 0.125em rgba(255, 255, 255, .25), 0.0625em 0.0625em 0.125em rgba(0, 0, 0, .25);
+                  @apply flex items-center text-center text-white text-[0.8em] font-[400] leading-[0.5em] opacity-[0.75];
+                }
+          
+                .balance {
+                  @apply flex justify-center items-center w-[6.875em] h-[1.8em] slg:h-[1.6em] relative;
+                  &:before {
+                    box-shadow: 0.125em 0.125em 0.25em rgba(255, 255, 255, .15), -0.125em -0.125em 0.375em rgba(0, 0, 0, .75);
+                    @apply bg-black/[0.1] content-[""] opacity-[0.25] rounded-[0.75em] absolute top-0 bottom-0 right-0 left-0;
+                  }
+          
+                  > span {
+                    @apply text-white text-[0.75em] font-[700] leading-[1em] text-center;
+                  }
+                }
+            }
+        }
+        .game-management-body {
+            @apply flex flex-col-reverse slg:flex-row justify-center w-full xl:max-h-[85%];
+            .game-controller {
+                @apply flex flex-col-reverse slg:flex-col gap-[2em] w-full slg:w-[300px] bg-[#213743] h-full p-[14px] rounded-[0px_0px_10px_10px] slg:rounded-[10px_0px_0px_10px];
+                .game-play-way-tab {
+                    @apply flex justify-between gap-[10px] bg-[#0f212e] p-[6px] rounded-full;
+                    > button {
+                        @apply w-full text-white py-[8px] text-[14px] font-[600];
+                    }
+                    ._active {
+                        @apply  bg-[#2f4553] rounded-full;
+                    }
+                }
+                .game-setting-controller {
+                    @apply flex flex-col-reverse slg:flex-col gap-[10px];
+                    label {
+                        @apply text-[12px] text-[#b1bad3] font-[600];
+                    }
+                    .bet-amount {
+                        @apply flex flex-col gap-[4px];
+                        > p {
+                            @apply flex justify-between;
+                        }
+                        .bet-amount-form {
+                            @apply flex items-center bg-[#2f4553] shadow-md rounded-[4px];
+                            .bet-amount-double-controller {
+                                @apply flex relative h-full;
+                                > button {
+                                    @apply min-w-[44px] text-[#d5dceb] rounded-[4px] py-[8px];
+                                    &:hover {
+                                        @apply bg-[#3d5564] text-white;
+                                    }
+                                    &:active {
+                                        @apply bg-[#071d2a] text-white scale-[0.96];
+                                    }
+                                }
+                                &:after {
+                                    @apply flex items-center absolute right-[43px] top-[15%] content-[""] border-l-[2px] border-[#1a2c38] w-[2px] h-[70%];
+                                }
+                            }
+                        }
+                    }
+                    .bet-count {
+                        @apply flex flex-col gap-[4px];
+                    }
+                    .on-win, .on-loss {
+                        @apply flex flex-col gap-[4px];
+                        > div {
+                            @apply flex items-center gap-[2px] bg-[#2f4553] shadow-md rounded-[4px];
+                            > div {
+                                @apply flex h-full;
+                                > button {
+                                    @apply text-[#d5dceb] text-[12px] rounded-[4px] px-[6px] py-[9px] whitespace-nowrap;
+                                    &:hover {
+                                        @apply bg-[#3d5564] text-white;
+                                    }
+                                    &:active {
+                                        @apply bg-[#071d2a] text-white scale-[0.96];
+                                    }
+                                }
+                                ._active {
+                                    @apply bg-[#071d2a] text-white scale-[0.96];
+                                }
+                            }
+                        }
+                    }
+                    .stop-profit, .stop-on-Loss {
+                        @apply flex flex-col gap-[4px];
+                    }
+                    .play-bet-button {
+                        @apply w-full pt-[10px];
+                        > button {
+                            @apply w-full py-[18px] bg-[#00e701] rounded-[4px] text-[#013e01] text-[14px] font-[600] shadow-md;
+                            &:active {
+                                @apply bg-[#00b801];
+                            } 
+                        }
+                    }
+                }
+            }
+            .game-play-ground {
+                @apply flex flex-col w-full gap-[1em] slg:w-[calc(100%-300px)] bg-[#0f212e] p-[0.8em] rounded-[10px_10px_0px_0px] slg:rounded-[0px_10px_10px_0px]
+                text-[8px] 3xs:text-[10px] 2xs:text-[12px] xs:text-[14px] slg:text-[18px] lg:text-[20px] xl:text-[28px];
+                .profit-ground {
+                    @apply flex h-[70%] xl:h-[60%];
+                    .profit-calc-list {
+                        @apply w-full slg:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%] flex flex-col gap-[11.8px];
+                    }
+                }
+                .diamond-ground {
+                    @apply flex items-end w-full h-[40%] bg-[#071d2a] rounded-[10px] pt-[2em] p-[0.5em];
+                    .diamonds-group {
+                        @apply grid grid-cols-5 gap-[0.5em] w-full;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.game-deposit-modal {
+    width: 22em;
+    height: 10em;
+    background: #142237;
+    border-radius: 1.5em;
+    padding: 1.5em 1.2em;
+    box-shadow: 0 0 1.25em rgba(0,0,0,.5);
+    @apply text-[14px] 2xs:text-[20px] xs:text-[24px] sm:text-[28px];
+    .modal-close {
+      position: absolute;
+      right: 1.2em;
+      top: 1em;
+      color: white;
+      cursor: pointer;
+    }
+    > div:last-child {
+      @apply flex flex-col justify-center h-full gap-[20px];
+      p {
+        @apply text-center text-white text-[1em];
+      }
+      a {
+        @apply text-center text-[0.5em] text-green;
+        &:hover {
+          @apply underline;
+        }
+      }
+    }
+  }
