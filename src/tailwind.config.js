@@ -36,6 +36,20 @@ module.exports = {
     // Extend default configurations
     extend: {
       colors: {
+        red: '#ff1c44',
+        green: '#17d118',
+        blue: '#1e6eef',
+        cyan: '#03bfc7',
+        pink: '#ff4fb6',
+        purple: '#7633fa',
+        yellow: '#fec916',
+        'thick-red': '#991029',
+        'thick-green': '#006b01',
+        'thick-blue': '#0e3d8c',
+        'thick-cyan': '#02858b',
+        'thick-pink': '#ab186f',
+        'thick-purple': '#430bb0',
+        'thick-yellow': '#81670e'
       },
       container: {
         center: true
