@@ -1,0 +1,9 @@
+.input-box {
+    @apply flex justify-between items-center gap-[8px] bg-[#0f212e] border-[2px] border-[#2f4553] rounded-[4px] px-[8px] py-[4px] w-full shadow-md;
+    input {
+        @apply bg-transparent outline-none p-[4px] text-[14px] text-white w-full;
+    }
+    &:hover {
+        @apply border-[#557086];
+    }
+}
