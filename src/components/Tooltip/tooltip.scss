@@ -1,0 +1,16 @@
+.tooltip {
+  @apply relative w-full;
+  .tooltip-content {
+    @apply grid grid-cols-2 gap-[14px] w-full items-center absolute bg-[#1a2c38] rounded-[4px] p-[0_14px_14px] shadow-md min-h-[97px];
+    &:after {
+      @apply content-[""] absolute -left-[18px] border-[10px] border-dotted;
+      border-color: transparent #1a2c38 transparent transparent;
+    }
+  }
+  label {
+    @apply text-[14px] text-[#b1bad3] font-[600];
+  }
+  .input-box {
+    @apply bg-[#2f4553];
+  }
+}
