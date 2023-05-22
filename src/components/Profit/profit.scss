@@ -1,0 +1,9 @@
+.profit-calc-item {
+    @apply flex justify-between bg-[#1a2c38] rounded-[4px] p-[10px] w-full shadow-md;
+    p {
+        @apply text-[#b1bad3] text-[14px] font-[600];
+    }
+    &:hover {
+        @apply bg-[#2f4553];
+    }
+}
