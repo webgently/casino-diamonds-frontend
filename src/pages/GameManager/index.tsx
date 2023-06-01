@@ -33,7 +33,7 @@ const GameManager = () => {
   const token = new URLSearchParams(useLocation().search).get('cert');
 
   const [totalBalance, setTotalBalance] = useState(0);
-  const [betAmount, setBetAmount] = useState(1);
+  const [betAmount, setBetAmount] = useState(10);
   const [betWayAuto, setBetWayAuto] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [score, setScore] = useState(0);
@@ -59,9 +59,8 @@ const GameManager = () => {
   };
 
   const handleSumbit = async () => {
-    if (Number(totalBalance) - betAmount <= 0) {
-      setDepositModalOpen(true);
-      return;
+    if (betAmount === 0) {
+      toast.error("Insufficient your bet amount");
     }
     if (betWayAuto && autoPlay) {
       setAutoPlay(false);
@@ -83,7 +82,7 @@ const GameManager = () => {
         }
         socket.emit('playBet', {
           userid: auth?.userid,
-          betAmount
+          betAmount: betAmount * 100
         });
       }
     }
@@ -106,7 +105,12 @@ const GameManager = () => {
   };
 
   const refund = () => {
-    socket.emit('refund', { userid: auth?.userid });
+    if (!isLoading) {
+      setIsLoading(true);
+      socket.emit('refund', { userid: auth?.userid });
+    } else {
+      toast.error('Refund is loading...')
+    }
   };
 
   useEffect(() => {
@@ -141,8 +145,8 @@ const GameManager = () => {
         diamond[i].ind = e.diamonds[i];
         setDiamonds(diamond);
         i++;
-      }, 400);
-      await sleep(2000);
+      }, 500);
+      await sleep(2500);
       let diamond = [...diamonds];
       setSameInds(e.sameInds);
       e.sameInds
@@ -162,6 +166,15 @@ const GameManager = () => {
       setTotalBalance(e.balance);
       clearInterval(interval);
       setScore(e.score);
+      if (e.score > 0.1) {
+        if (onWin && winPercent > 0) {
+          setBetAmount((prev)=> prev + prev * winPercent / 100);
+        }
+      } else {
+        if (onLoss && lossPercent > 0) {
+          setBetAmount((prev)=> prev + prev * lossPercent / 100);
+        }
+      }
       setIsLoading(false);
     });
     socket.on(`refund-${auth?.userid}`, async (e: any) => {
@@ -173,6 +186,10 @@ const GameManager = () => {
       } as StoreObject);
       setTotalBalance(0);
       toast.success('Balance Refunded');
+      setTimeout(() => {
+        setIsLoading(false);
+        window.location.href = 'http://annie.ihk.vipnps.vip/iGaming-web';
+      }, 1500);
     });
     socket.on(`insufficient-${auth?.userid}`, async () => {
       update({
@@ -184,10 +201,15 @@ const GameManager = () => {
       setTotalBalance(0);
       setDepositModalOpen(true);
     });
+    socket.on(`error-${auth?.userid}`, async (e) => {
+      toast.error(e);
+      setIsLoading(false);
+    });
     return () => {
       socket.off(`playBet-${auth?.userid}`);
       socket.off(`refund-${auth?.userid}`);
       socket.off(`insufficient-${auth?.userid}`);
+      socket.off(`error-${auth?.userid}`);
     };
     // eslint-disable-next-line
   }, [diamonds]);
@@ -195,14 +217,9 @@ const GameManager = () => {
   useEffect(() => {
     if (autoPlay && betWayAuto) {
       if (
+        (totalBalance - betAmount < 0) ||
         (winAmount > 0 && totalBalance > beforeBetBalance && totalBalance - beforeBetBalance >= winAmount) ||
         (lossAmount > 0 && beforeBetBalance > totalBalance && beforeBetBalance - totalBalance >= lossAmount) ||
-        (winPercent > 0 &&
-          totalBalance > beforeBetBalance &&
-          totalBalance - beforeBetBalance >= beforeBetBalance * winPercent) ||
-        (lossPercent > 0 &&
-          beforeBetBalance > totalBalance &&
-          beforeBetBalance - totalBalance >= beforeBetBalance * lossPercent) ||
         (playCount > 0 && betCount <= 0)
       ) {
         setAutoPlay(false);
@@ -218,16 +235,16 @@ const GameManager = () => {
         setIsLoading(true);
         socket.emit('playBet', {
           userid: auth?.userid,
-          betAmount
+          betAmount: betAmount * 100
         });
-      }, 2500);
+      }, 4000);
     }
 
     return () => {
       clearInterval(autoPlayInterval);
     };
     // eslint-disable-next-line
-  }, [autoPlay, totalBalance, betCount]);
+  }, [autoPlay, totalBalance, betCount, score]);
 
   useEffect(() => {
     initializeDiamods();
@@ -362,7 +379,7 @@ const GameManager = () => {
             <div className="balance-container">
               <label>Balance</label>
               <div className="balance">
-                <span>${totalBalance.toFixed(2)}</span>
+                <span>₹{(totalBalance / 100).toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -380,7 +397,7 @@ const GameManager = () => {
                 <div className="bet-amount">
                   <p>
                     <label>Bet Amount</label>
-                    <label>${betAmount.toFixed(2)}</label>
+                    <label>₹{Number(betAmount).toFixed(2)}</label>
                   </p>
                   <div className="bet-amount-form">
                     <Input
@@ -388,7 +405,7 @@ const GameManager = () => {
                       icon="Coin"
                       min={0}
                       value={betAmount}
-                      onChange={setBetAmount}
+                      onChange={(e: any) => totalBalance - Number(e) >= 0 && setBetAmount(Number(e))}
                       disabled={autoPlay}
                     />
                     <div className="bet-amount-double-controller">
@@ -467,7 +484,7 @@ const GameManager = () => {
                     <div className="stop-profit">
                       <p className="flex justify-between">
                         <label>Stop on Profit</label>
-                        <label>$0.00</label>
+                        <label>₹{Number(winAmount).toFixed(2)}</label>
                       </p>
                       <Input
                         type="number"
@@ -481,7 +498,7 @@ const GameManager = () => {
                     <div className="stop-on-Loss">
                       <p className="flex justify-between">
                         <label>Stop on Loss</label>
-                        <label>$0.00</label>
+                        <label>₹{Number(lossAmount).toFixed(2)}</label>
                       </p>
                       <Input
                         type="number"
