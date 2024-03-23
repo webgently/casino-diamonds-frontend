@@ -43,9 +43,9 @@ const GameManager = () => {
   const [onLoss, setOnLoss] = useState(false);
   const [betCount, setBetCount] = useState<number>(0);
   const [winPercent, setWinPercent] = useState<number>(0);
-  const [lossPercent, setLossPercent] = useState<number>(0);
+  const [lossPercent, setLosePercent] = useState<number>(0);
   const [winAmount, setWinAmount] = useState<number>(0);
-  const [lossAmount, setLossAmount] = useState<number>(0);
+  const [loseAmount, setLoseAmount] = useState<number>(0);
   const [sameInds, setSameInds] = useState([]);
   const [profitStatus, setProfitStatus] = useState<ProfitListObject[]>([]);
   const [depositModalOpen, setDepositModalOpen] = useState<boolean>(false);
@@ -82,7 +82,7 @@ const GameManager = () => {
         }
         socket.emit('playBet', {
           userid: auth?.userid,
-          betAmount: betAmount * 100
+          betAmount: betAmount
         });
       }
     }
@@ -219,7 +219,7 @@ const GameManager = () => {
       if (
         (totalBalance - betAmount < 0) ||
         (winAmount > 0 && totalBalance > beforeBetBalance && totalBalance - beforeBetBalance >= winAmount) ||
-        (lossAmount > 0 && beforeBetBalance > totalBalance && beforeBetBalance - totalBalance >= lossAmount) ||
+        (loseAmount > 0 && beforeBetBalance > totalBalance && beforeBetBalance - totalBalance >= loseAmount) ||
         (playCount > 0 && betCount <= 0)
       ) {
         setAutoPlay(false);
@@ -235,7 +235,7 @@ const GameManager = () => {
         setIsLoading(true);
         socket.emit('playBet', {
           userid: auth?.userid,
-          betAmount: betAmount * 100
+          betAmount: betAmount
         });
       }, 4000);
     }
@@ -379,7 +379,7 @@ const GameManager = () => {
             <div className="balance-container">
               <label>Balance</label>
               <div className="balance">
-                <span>₹{(totalBalance / 100).toFixed(2)}</span>
+                <span>${totalBalance.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -397,7 +397,7 @@ const GameManager = () => {
                 <div className="bet-amount">
                   <p>
                     <label>Bet Amount</label>
-                    <label>₹{Number(betAmount).toFixed(2)}</label>
+                    <label>${Number(betAmount).toFixed(2)}</label>
                   </p>
                   <div className="bet-amount-form">
                     <Input
@@ -477,14 +477,14 @@ const GameManager = () => {
                           min={0}
                           disabled={autoPlay || !onLoss}
                           value={onLoss ? lossPercent : 0}
-                          onChange={setLossPercent}
+                          onChange={setLosePercent}
                         />
                       </div>
                     </div>
                     <div className="stop-profit">
                       <p className="flex justify-between">
                         <label>Stop on Profit</label>
-                        <label>₹{Number(winAmount).toFixed(2)}</label>
+                        <label>${Number(winAmount).toFixed(2)}</label>
                       </p>
                       <Input
                         type="number"
@@ -498,15 +498,15 @@ const GameManager = () => {
                     <div className="stop-on-Loss">
                       <p className="flex justify-between">
                         <label>Stop on Loss</label>
-                        <label>₹{Number(lossAmount).toFixed(2)}</label>
+                        <label>${Number(loseAmount).toFixed(2)}</label>
                       </p>
                       <Input
                         type="number"
                         icon="Coin"
                         min={0}
                         disabled={autoPlay}
-                        value={lossAmount}
-                        onChange={setLossAmount}
+                        value={loseAmount}
+                        onChange={setLoseAmount}
                       />
                     </div>
                   </>
